@@ -12,8 +12,8 @@ from .metrics import (
     get_users,
 )
 from .backend import get_movie_summary, get_user_projects
-from .analytics import get_buttons_analytics, get_finishing
-from .models import MovieResponse, AnalyticsResponse
+from .analytics import get_buttons_analytics, get_finishing, get_conversion
+from .models import MovieResponse, AnalyticsResponse, ConversionResponse
 
 app = FastAPI()
 
@@ -44,6 +44,12 @@ async def metrics(movie_id: str) -> MovieResponse:
     )
 
 
+@app.get("/conversion/{user_id}", response_model=ConversionResponse)
+async def conversion(user_id: str) -> ConversionResponse:
+    projects = await get_user_projects(user_id)
+    return await get_conversion(projects)
+
+
 @app.get("/analytics/{user_id}", response_model=AnalyticsResponse)
 async def analytics(user_id: str):
     projects = await get_user_projects(user_id)
@@ -57,4 +63,8 @@ async def analytics(user_id: str):
         graph.append({"date": start, "views": views, "visitors": visitors})
 
     videos = {project: await metrics(project) for project in projects}
-    return AnalyticsResponse(graph=graph, videos=videos)
+    return AnalyticsResponse(
+        graph=graph,
+        videos=videos,
+        conversion=await get_conversion(projects),
+    )

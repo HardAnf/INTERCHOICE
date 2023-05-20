@@ -22,6 +22,14 @@ class DayInfo(BaseModel):
     visitors: int
 
 
+class ConversionResponse(BaseModel):
+    previous_dates: str
+    previous: float
+    dates: str
+    current: float
+
+
 class AnalyticsResponse(BaseModel):
     graph: list[DayInfo]
     videos: dict[str, MovieResponse]
+    conversion: ConversionResponse

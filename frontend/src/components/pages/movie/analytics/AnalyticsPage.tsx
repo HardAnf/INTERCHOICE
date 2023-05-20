@@ -10,6 +10,8 @@ import {
   ResponsiveContainer
 } from 'recharts'
 import { useDispatch } from 'react-redux'
+import TrendingUp from '@material-ui/icons/TrendingUp'
+import TrendingDown from '@material-ui/icons/TrendingDown'
 
 import { VideoAnalytics, VideoAnalyticsProps } from './VideoAnalytics'
 import { useAppSelector } from 'root/store/application.store'
@@ -37,9 +39,17 @@ type Videos = {
   [guid: string]: MovieResponse
 }
 
+type Conversion = {
+  previous_dates: string
+  previous: number
+  dates: string
+  current: number
+}
+
 interface Analytics {
   graph: DayInfo[]
   videos: Videos
+  conversion: Conversion
 }
 
 const getAnalytics = async (userId: string): Promise<Analytics> => {
@@ -110,6 +120,12 @@ export const AnalyticsPage: React.FC = () => {
     })
   console.log(analyticsData)
 
+  const conversionGrowth = data.conversion.current - data.conversion.previous
+  const conversionStyle = {
+    fontSize: '2rem',
+    fontWeight: 'bold'
+  }
+
   return (
     <div
       className='container'
@@ -117,6 +133,55 @@ export const AnalyticsPage: React.FC = () => {
         height: '90vh'
       }}
     >
+      <div
+        style={{
+          width: '100%',
+          backgroundColor: '#4c4c4c',
+          color: '#fff',
+          margin: '0.5em',
+          padding: '0.5em',
+          display: 'flex',
+          flexFlow: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between'
+        }}
+      >
+        <div>
+          <p style={conversionStyle}>Конверсия за текущий период</p>
+          <p style={conversionStyle}>
+            <span style={{ color: '#e32879' }}>{data.conversion.dates}</span> -{' '}
+            {data.conversion.current}%
+          </p>
+          <p style={conversionStyle}>Конверсия за прошедший период </p>
+          <p style={conversionStyle}>
+            <span style={{ color: '#e32879' }}>{data.conversion.previous_dates}</span> -{' '}
+            {data.conversion.previous}%
+          </p>
+        </div>
+        <p
+          style={{
+            color: conversionGrowth < 0 ? '#d32f2f' : '#388e3c',
+            fontSize: '2rem',
+            display: 'flex',
+            alignItems: 'center'
+          }}
+        >
+          {conversionGrowth < 0 ? (
+            <TrendingDown
+              style={{
+                fontSize: '48px'
+              }}
+            />
+          ) : (
+            <TrendingUp
+              style={{
+                fontSize: '48px'
+              }}
+            />
+          )}{' '}
+          Рост {conversionGrowth}%
+        </p>
+      </div>
       <ResponsiveContainer width='100%' height='80%'>
         <ComposedChart width={500} height={400} data={data.graph}>
           <XAxis dataKey='date' scale='auto' />

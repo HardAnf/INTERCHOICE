@@ -25,8 +25,7 @@ export const VideoAnalytics: React.FC<VideoAnalyticsProps> = ({
   const staticstsStyle = {
     color: '#fff',
     fontWeight: '24',
-    fontSize: '24',
-    lineHeight: '0.5'
+    fontSize: '24px'
   }
   return (
     <div
@@ -60,11 +59,11 @@ export const VideoAnalytics: React.FC<VideoAnalyticsProps> = ({
       >
         <h1 style={staticstsStyle}>{name}</h1>
         <h3 style={staticstsStyle}>Просмотры - {views}</h3>
-        <h3 style={staticstsStyle}>Досматриваемость - {finishing}%</h3>
+        <h3 style={staticstsStyle}>Досматриваемость - {finishing * 100}%</h3>
         {Object.keys(buttons).map(key => (
-          <h3 style={staticstsStyle} key={key}>
+          <h4 style={staticstsStyle} key={key}>
             Выбор &quot;{key}&quot; - {buttons[key]}
-          </h3>
+          </h4>
         ))}
         <h3 style={staticstsStyle}>Поделились - {shares}</h3>
       </div>

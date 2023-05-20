@@ -1,0 +1,46 @@
+.container
+  display block
+  width 100%
+  margin-bottom 1.5em
+  margin-top .7em
+
+  .fieldContainer
+
+  .field
+    color white
+
+    fieldset
+      border-color: white !important
+
+  .input
+    border-radius 4px
+    overflow hidden !important
+
+  .focused
+    label
+      color var(--color-1) !important
+    fieldset
+      border-color var(--color-1) !important
+  &>*
+    display block
+    width 100%
+
+  .error
+    color var(--color-1)
+    font-size 0.7em
+    margin-top 1em
+  .root
+    .label
+      color white
+
+    .label.focusedLabel
+      color: var(--color-1) !important
+
+  .dirty   
+    .label
+        color var(--color-1) !important
+    .field
+      fieldset
+        border-color var(--color-1) !important
+        color var(--color-1) !important
+

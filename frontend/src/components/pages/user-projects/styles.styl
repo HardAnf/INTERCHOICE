@@ -1,0 +1,60 @@
+.moviesGrid
+  display grid
+  grid-template-columns 1fr 1fr
+  gap 1.5em
+
+
+
+.movie
+  display grid
+  background #3D3D3D
+  grid-template-columns 1fr 1.2fr
+
+  .moviePreview
+    padding-top 148%
+    height auto
+    position relative
+    & > img
+      position absolute
+      left 0
+      top 0
+      width 100%
+      height 100%
+      object-fit cover
+
+  .movieInfo
+    padding 2em 1.5em
+    display flex
+    flex-flow column
+    color white
+    font-size 1.2em
+    position relative
+
+    .menuIcon
+      position absolute
+      right 1.5em
+      top 1.5em
+      width 2.5rem
+      cursor pointer
+      & > svg
+        width 100%
+        height auto
+
+    .menu
+      position absolute
+      
+    .movieLink
+      color inherit
+      margin-right 4rem
+
+    .movieTitle
+      font-weight 900
+      margin 0
+      font-size 1.5em
+      color inherit
+
+    .shortDescription
+      margin-top 1.5em
+
+    .movieActions
+      margin-top auto

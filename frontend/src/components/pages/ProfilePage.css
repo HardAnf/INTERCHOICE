@@ -1,0 +1,15 @@
+.PageContent {
+    padding: 10px;
+    width: 100%;
+    height: 100%;
+}
+.ProfilePageDiv {
+    margin: auto;
+    padding: 20px;
+    width: 100%;
+    background-color: #5695b094;
+    color: #ffffff;
+    border-radius: 20px;
+    height: 450px;
+    /* max-width: 1000px; */
+}

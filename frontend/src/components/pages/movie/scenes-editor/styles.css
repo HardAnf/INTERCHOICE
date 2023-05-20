@@ -1,0 +1,9 @@
+.react-flow__node {
+  background: #3D3D3D;
+  border: none;
+}
+
+.react-flow__edge-text {
+  font-size: 9.5px;
+  font-family: sans-serif;
+}

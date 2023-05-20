@@ -1,0 +1,52 @@
+.container
+  width 100vw
+  height 100vh
+  position fixed
+  top 0
+  left 0
+  display flex
+  background black
+  .video
+    width 100%
+    height 100%
+    position relative
+  .childrenVideo
+    z-index -100
+    position absolute
+    visibility hidden
+
+  .choice
+    background rgba(161, 161, 161, 0.35)
+    border-radius 1rem
+    min-width 20em
+    position absolute
+    top 50%
+    left 50%
+    transform translate3d(-50%, -50%, 0)
+    display flex
+    flex-flow column
+    align-items center
+    justify-content center
+    padding 3em 4em 3em
+  
+  .question
+    text-transform uppercase
+    font-weight 400
+    font-size 1.8em
+    line-height 1.16
+    margin-bottom 5em
+    color white
+
+  .buttons
+    display flex
+    margin-top auto
+    flex-flow row
+    justify-content space-around
+    
+    .videoButton
+      background rgba(76, 76, 76, 0.34)
+      padding 1em 2em
+      min-width 15em
+      font-size 1.2em
+      color white
+      margin 0 1em

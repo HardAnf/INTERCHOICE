@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  sql-server:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    user: root
+    ports:
+      - 1433:1433
+    container_name: MsSqlServer
+    environment:
+        # MSSQL_SA_PASSWORD: "password"
+        MSSQL_SA_PASSWORD: "Complex_passw0rd"
+        ACCEPT_EULA: "Y"
+    volumes:  
+      - db-data:/var/opt/mssql/data/
+    networks:
+      - db-backend
+      - backend-frontend
+
+  backend:
+    build:
+        context: ./backend
+        dockerfile: Dockerfile
+    ports:
+        - 5000:5000
+        - 40902:40902
+    volumes:
+      - user-data:/app/publish/public
+    networks:
+        - db-backend
+        - backend-frontend
+
+  analytic:
+    build:
+        context: ./analytic
+        dockerfile: Dockerfile
+    ports:
+        - 8080:8080
+    networks:
+        - db-backend
+        - backend-frontend
+    env_file:
+      - ./analytic/.env
+
+
+networks:
+  db-backend:
+  backend-frontend:
+
+volumes:
+  db-data:
+  user-data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: "$PWD/public"

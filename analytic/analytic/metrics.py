@@ -2,7 +2,9 @@ import aiohttp
 import asyncio
 from math import ceil
 from .settings import get_settings
-from .models import Choice
+from .models import Choice, Category
+
+start_date = "2023-05-01"  # костыль
 
 
 async def metrics_api_request(path: str, params: dict):
@@ -14,7 +16,8 @@ async def metrics_api_request(path: str, params: dict):
             params={
                 "id": settings.YM_IDS,
                 "limit": 100_000,
-                "date1": "2023-05-01",
+                "date1": start_date,
+                "lang": "ru",
                 **params,
             },
         ) as response:
@@ -43,7 +46,7 @@ async def get_page_metrics_filter(
 
 
 async def get_page_metrics(
-    metrics: str, movie_ids: list[str], date1: str = "2023-05-01", date2: str = "today"
+    metrics: str, movie_ids: list[str], date1: str = start_date, date2: str = "today"
 ) -> int:
     return sum(
         await asyncio.gather(
@@ -100,3 +103,41 @@ async def get_choices(movie_id: str) -> list[Choice]:
         for node in response
     ]
     return [Choice(**node) for node in data]
+
+
+async def get_interests() -> list[Category]:
+    response = (
+        await metrics_api_request(
+            "stat/v1/data",
+            {"preset": "interests2"},
+        )
+    )["data"]
+    return [
+        Category(
+            name=", ".join(
+                [
+                    dimension["name"]
+                    for dimension in catrgory["dimensions"]
+                    if dimension["id"]
+                ]
+            ),
+            value=catrgory["metrics"][0],
+        )
+        for catrgory in response
+    ]
+
+
+async def get_demographics():
+    response = (
+        await metrics_api_request(
+            "stat/v1/data",
+            {"preset": "age_gender"},
+        )
+    )["data"]
+    return [
+        Category(
+            name=", ".join([dimension["name"] for dimension in category["dimensions"]]),
+            value=category["metrics"][0],
+        )
+        for category in response
+    ]

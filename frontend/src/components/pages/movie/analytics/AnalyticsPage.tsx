@@ -7,7 +7,10 @@ import {
   YAxis,
   Tooltip,
   Legend,
-  ResponsiveContainer
+  ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell
 } from 'recharts'
 import { useDispatch } from 'react-redux'
 import TrendingUp from '@material-ui/icons/TrendingUp'
@@ -17,6 +20,8 @@ import { VideoAnalytics, VideoAnalyticsProps } from './VideoAnalytics'
 import { useAppSelector } from 'root/store/application.store'
 import { userProjectsActions } from 'root/store/user-projects/user-projects.slice'
 import { Loader } from 'components/Loader'
+
+// сделать это нормально, разбить компоненты, разбить на файлы
 
 type DayInfo = {
   date: string
@@ -46,10 +51,17 @@ type Conversion = {
   current: number
 }
 
+type Category = {
+  name: string
+  value: number
+}
+
 interface Analytics {
   graph: DayInfo[]
   videos: Videos
   conversion: Conversion
+  interests: Category[]
+  demographics: Category[]
 }
 
 const getAnalytics = async (userId: string): Promise<Analytics> => {
@@ -66,6 +78,7 @@ export const AnalyticsPage: React.FC = () => {
   const pending = useAppSelector(state => state.userProjects.pending)
   const [data, setData] = useState<Analytics | null>(null)
   const userId = ''
+  const colors = ['#9729B8', '#F27E85', '#C4C4C4', '#E047C8', '#D447E0']
 
   const dispatch = useDispatch()
 
@@ -199,6 +212,76 @@ export const AnalyticsPage: React.FC = () => {
           />
         </ComposedChart>
       </ResponsiveContainer>
+      <hr />
+      <div
+        style={{
+          display: 'flex',
+          flexFlow: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center'
+        }}
+      >
+        <p style={{ color: '#fff', textAlign: 'center', width: '50%', ...conversionStyle }}>
+          Демография
+        </p>
+        <p style={{ color: '#fff', textAlign: 'center', width: '50%', ...conversionStyle }}>
+          Интересы
+        </p>
+      </div>
+      <div
+        style={{
+          display: 'flex',
+          flexFlow: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          height: '40vh'
+        }}
+      >
+        <ResponsiveContainer width='50%' height='100%'>
+          <PieChart width={500} height={500}>
+            <Pie
+              dataKey='value'
+              isAnimationActive={false}
+              data={data.demographics}
+              cx='50%'
+              cy='50%'
+              outerRadius={80}
+              fill='#e32879'
+              paddingAngle={2}
+              label
+            >
+              {data.demographics.map((_, i) => (
+                <Cell key={`cell-${i}`} fill={colors[i % colors.length]} />
+              ))}
+            </Pie>
+            <Tooltip />
+            <Legend />
+          </PieChart>
+        </ResponsiveContainer>
+        <ResponsiveContainer width='50%' height='100%'>
+          <PieChart width={500} height={500}>
+            <Pie
+              dataKey='value'
+              isAnimationActive={false}
+              data={data.interests.filter(v => v.value > 2)}
+              cx='50%'
+              cy='50%'
+              outerRadius={80}
+              fill='#e32879'
+              paddingAngle={2}
+              label
+            >
+              {data.interests
+                .filter(v => v.value > 2)
+                .map((_, i) => (
+                  <Cell key={`cell-${i}`} fill={colors[i % colors.length]} />
+                ))}
+            </Pie>
+            <Tooltip />
+            <Legend />
+          </PieChart>
+        </ResponsiveContainer>
+      </div>
       <hr />
       {analyticsData.map(videoAnalytics => (
         <VideoAnalytics {...videoAnalytics} key={videoAnalytics.projectId} />

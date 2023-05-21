@@ -29,7 +29,14 @@ class ConversionResponse(BaseModel):
     current: float
 
 
+class Category(BaseModel):
+    name: str
+    value: float
+
+
 class AnalyticsResponse(BaseModel):
     graph: list[DayInfo]
     videos: dict[str, MovieResponse]
     conversion: ConversionResponse
+    interests: list[Category]
+    demographics: list[Category]

@@ -6,10 +6,13 @@ from fastapi.middleware.cors import CORSMiddleware
 from math import ceil
 from .metrics import (
     metrics_api_request,
+    get_page_metrics,
     get_views,
     get_shares,
     get_choices,
     get_users,
+    get_interests,
+    get_demographics,
 )
 from .backend import get_movie_summary, get_user_projects
 from .analytics import get_buttons_analytics, get_finishing, get_conversion
@@ -63,8 +66,11 @@ async def analytics(user_id: str):
         graph.append({"date": start, "views": views, "visitors": visitors})
 
     videos = {project: await metrics(project) for project in projects}
+
     return AnalyticsResponse(
         graph=graph,
         videos=videos,
         conversion=await get_conversion(projects),
+        interests=await get_interests(),
+        demographics=await get_demographics(),
     )
